@@ -4,6 +4,7 @@ from discord.ext import commands
 import discord
 import threading
 from utils.query_tool import ask_llm
+from utils.news_tool import pull_general_news, pull_company_news
 
 class Discord_Bot():
     def __init__(self, llm, embed_model, temperature=0.75):
@@ -38,7 +39,17 @@ class Discord_Bot():
             print(f"Response:\n {response}")
 
             await thinking_msg.edit(content=response)
+        
+        @self.bot.command()
+        async def news(ctx, symbol, *, question):
+            print(f"Symbol and Question Received: {question} about {symbol}")
+            thinking_msg = await ctx.send("🤔 Let me think about that...")
 
+            response = ""
+            print(f"Response:\n {response}")
+
+            await thinking_msg.edit(content=response)
+        
         @self.bot.command()
         async def h(ctx):
             await ctx.send('Pong!')
