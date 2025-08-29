@@ -1,31 +1,15 @@
-import os
-import asyncio
-from dotenv import load_dotenv
-import discord
-from discord.ext import commands
+from DiscordBot import Discord_Bot
+from llama_index.llms.ollama import Ollama
+from llama_index.embeddings.huggingface import HuggingFaceEmbedding
 
-load_dotenv()
-DISCORD_TOKEN = os.getenv('DISCORD_CLIENT_TOKEN')
+llm = Ollama(model='qwen3:8b', request_timeout=600)
+embed_model = HuggingFaceEmbedding('BAAI/bge-base-en-v1.5')
+temperature = 0.5
 
-intents = discord.Intents.default()
-intents.message_content = True
-
-bot = commands.Bot(command_prefix='$', intents=intents)
-
-@bot.event
-async def on_ready():
-    print(f"Logged in as {bot.user}")
-
-async def load_extensions():
-    try:
-        await bot.load_extension("cogs.inform")
-        print("Successfully loaded cogs.inform")
-    except Exception as e:
-        print(f"[ERROR] Failed to load cog 'cogs.inform': {e}")
-
-async def main():
-    await load_extensions()
-    await bot.start(DISCORD_TOKEN)
+def main():
+    print("Starting main application")
+    client = Discord_Bot(llm, embed_model)
+    client.run()
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    main()
