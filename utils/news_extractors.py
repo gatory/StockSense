@@ -5,16 +5,23 @@ import json
 class NewsExtractor(BaseReader):
     def load_data(self, file, extra_info=None):
         with open(file, "r") as f:
-            article = json.load(f)
+            data = json.load(f)
+            news = data['news']
         docs = []
-        for each in article:
-            docs.append(Document(text=f"Category: {each['category']}, 
-                                 Headline: {each['headline']},
-                                 Related: {each['related']},
-                                 Source: {each['source']},
-                                 Summary: {each['summary']},
-                                 URL: {each['url']}", 
-                                 extra_info=extra_info or {}))
+        for each in news:
+            doc = Document(
+                text=f"headline: {each['headline']}\nsummary: {each['summary']}\n\n",
+                extra_info={
+                    'category': each['category'],
+                    'datetime': each['datetime'],
+                    'headline': each['headline'],
+                    'id': each['id'],
+                    'image': each['image'],
+                    'related': each['related'],
+                    'source': each['source'],
+                    'summary': each['summary'],
+                    'url': each['url'],
+                }
+            )
+            docs.append(doc)
         return docs
-    
-    

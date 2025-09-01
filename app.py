@@ -2,7 +2,7 @@ from DiscordBot import Discord_Bot
 from llama_index.llms.ollama import Ollama
 from llama_index.embeddings.huggingface import HuggingFaceEmbedding
 
-llm = Ollama(model='qwen3:8b', request_timeout=600)
+llm = Ollama(model='llama3.2:1b', request_timeout=600)
 embed_model = HuggingFaceEmbedding('BAAI/bge-base-en-v1.5')
 temperature = 0.5
 
