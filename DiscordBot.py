@@ -5,6 +5,7 @@ import discord
 import threading
 from utils.query_tool import ask_llm
 from utils.news_tool import get_news_info
+from utils.yt_tool import YoutubeTool
 
 class Discord_Bot():
     def __init__(self, llm, embed_model, temperature=0.75):
@@ -23,6 +24,7 @@ class Discord_Bot():
         self.bot = commands.Bot(command_prefix='$', intents=intents)
         self.setup_events()
         self.setup_commands()
+        self.youtube = YoutubeTool()
 
     def setup_events(self):
         @self.bot.event
@@ -46,6 +48,16 @@ class Discord_Bot():
             thinking_msg = await ctx.send("🤔 Let me think about that...")
             
             response = get_news_info(query=question, llm=self.llm, embed_model=self.embed_model, symbol=symbol)
+            print(f"Response:\n {response}")
+
+            await thinking_msg.edit(content=response)
+
+        @self.bot.command()
+        async def news(ctx, yt_link, *, question):
+            print(f"Question Received: {question} about {yt_link}")
+            thinking_msg = await ctx.send("🤔 Let me think about that...")
+            
+            response = self.youtube.summarize_youtube(llm=self.llm, embed_model=self.embed_model, query=question)
             print(f"Response:\n {response}")
 
             await thinking_msg.edit(content=response)
